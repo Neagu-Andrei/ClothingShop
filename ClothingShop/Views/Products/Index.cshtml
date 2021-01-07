@@ -31,15 +31,19 @@
 
 @foreach (ClothingShop.Models.Product product in ViewBag.Products)
 {
-    <div class="panel panel-default">
-        @Html.Partial("ProductInfo", product)
-    </div>
-    <div class="panel-footer">
-        <a class=" btn btn-sm btn btn-success" href="/Products/Show/@product.Id">Afisare produs</a>
-        <form class="float-right" method="post" action="/Basket/New/@product.Id">
-            <button type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-shopping-cart"></i> &nbsp;Adauga in cos</button>
-        </form>
-    </div>
-    <br />
-    <br />
+    if(product.Approved)
+    {
+        <div class="panel panel-default">
+            @Html.Partial("ProductInfo", product)
+        </div>
+        <div class="panel-footer">
+            <a class=" btn btn-sm btn btn-success" href="/Products/Show/@product.Id">Afisare produs</a>
+            <form class="float-right" method="post" action="/Basket/New/@product.Id">
+                <button type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-shopping-cart"></i> &nbsp;Adauga in cos</button>
+            </form>
+        </div>
+        <br />
+        <br />
+    }
+
 }

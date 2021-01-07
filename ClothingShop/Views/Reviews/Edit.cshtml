@@ -7,8 +7,8 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
 <script src="~/Scripts/star-rating.js" type="text/javascript"></script>
 <h2>Editare review</h2>
-@using (Html.BeginForm(actionName: "Edit", controllerName: "Reviews"))
-{
+<form method="post" action="/Reviews/Edit/@Model.Id">
+    @Html.HttpMethodOverride(HttpVerbs.Put)
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
@@ -25,13 +25,13 @@
     @Html.Label("Rating", "Rating: ")
     <br />
     <input name="Rating" class="rating rating-loading" value="@Model.Rating" data-min="0" data-max="5" data-step="1">
-    //@Html.EditorFor(m => m.Rating)
+    @*@Html.EditorFor(m => m.Rating)*@
     @Html.ValidationMessageFor(m => m.Rating, "", new { @class = "text-danger" })
 
     <br />
     <br />
 
     <button class="btn btn-success" type="submit">Editeaza comentariu</button>
-}
+</form>
 
 

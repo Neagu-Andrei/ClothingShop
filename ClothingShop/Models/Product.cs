@@ -26,6 +26,8 @@ namespace ClothingShop.Models
         public int CategoryId { get; set; }
         public int FileId { get; set; }
         public string UserId { get; set; }
+        public bool Approved { get; set; }
+        public double ProductRating { get; set; }
 
         public virtual ApplicationUser User { get; set; }
         public virtual Category Category { get; set; }

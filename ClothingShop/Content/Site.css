@@ -1,4 +1,7 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -15,10 +18,77 @@
 .dl-horizontal dt {
     white-space: normal;
 }
+img{
+    width: 200px;
+    height:200px;
+
+}
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.font-logo {
+    font-family: 'Oswald', cursive;
+}
+
+.panel-product {
+    box-shadow: 0 2px 6px #ccc;
+    border-radius: 0 !important;
+}
+
+.product-heading {
+    background-color: #fff !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: 0 2px 4px #f2f2f2;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #3c3c3c;
+}
+
+.product-content-title {
+    font-weight: bold;
+    color: #3c3c3c;
+}
+
+.product-content-wrapper {
+    font-size: 13px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+    .product-content-wrapper * {
+        font-size: 13px !important;
+    }
+
+.product-meta {
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+    .product-meta:hover {
+        background-color: #fafafa;
+    }
+
+    .product-meta > * {
+        display: block;
+    }
+
+.full-width {
+    width: 100%;
+}
+
+.panel-footer{
+    justify-content: space-between;
 }

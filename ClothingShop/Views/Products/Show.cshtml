@@ -20,8 +20,8 @@
         <br />
         <i class="glyphicon glyphicon-globe"></i> @Model.Category.Name
         <br />
-        <img src="@Model.File.FilePath"/>
-        <input class="rating rating-loading" value="@ViewBag.ProductRating" data-min="0" data-max="5" data-step="0.1" data-disabled="true" />
+        <img src="~/Files/@Model.File.FileName" max-width="150" max-height="150" class="img-responsive center-block" />
+        <input class="rating rating-loading" value="@Model.ProductRating" data-min="0" data-max="5" data-step="0.1" data-disabled="true" />
         <hr>
         @if (User.IsInRole("Admin") || User.IsInRole("Contribuitor"))
         {
@@ -49,7 +49,7 @@
                     <i class="glyphicon glyphicon-user"></i> <i>review scris de </i>
                     <strong> @rev.User.UserName </strong>
                 </div>
-                @if (User.IsInRole("Admin") || User.IsInRole("Contribuitor") || User.IsInRole("User"))
+                @if (rev.UserId == ViewBag.utilizatorCurent || ViewBag.esteAdmin)
                 {
                     <div style="display: inline-block; float : left; margin-right: 15px">
                         <a class="glyphicon glyphicon-pencil" href="/Reviews/Edit/@rev.Id"></a>
@@ -76,7 +76,7 @@
             </div>
             <div class="col-md-8">
                 <div class="panel">
-                    <form method="post" action="/Reviews/New">
+                    <form method="post" action="/Products/Show/@Model.Id">
                         <div class="panel-body">
                             <input type="hidden" name="ProductId" value="@Model.Id" />
                             <label>Lasa un review la acest produs</label>

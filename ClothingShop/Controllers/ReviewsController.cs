@@ -38,24 +38,24 @@ namespace ProiectBun.Controllers
             
         }
 
-        [HttpPost]
-        [Authorize(Roles ="Admin,Contribuitor,User")]
-        public ActionResult New(Review rev)
-        {
-            rev.UserId = User.Identity.GetUserId();
-            rev.Date = DateTime.Now;
-            try
-            {
-                db.Reviews.Add(rev);
-                db.SaveChanges();
-                return Redirect("/Products/Show/" + rev.ProductId);
-            }
+        //[HttpPost]
+        //[Authorize(Roles ="Admin,Contribuitor,User")]
+        //public ActionResult New(Review rev)
+        //{
+        //    rev.UserId = User.Identity.GetUserId();
+        //    rev.Date = DateTime.Now;
+        //    try
+        //    {
+        //        db.Reviews.Add(rev);
+        //        db.SaveChanges();
+        //        return Redirect("/Products/Show/" + rev.ProductId);
+        //    }
 
-            catch (Exception e)
-            {
-                return Redirect("/Products/Show/" + rev.ProductId);
-            }
-        }
+        //    catch (Exception e)
+        //    {
+        //        return Redirect("/Products/Show/" + rev.ProductId);
+        //    }
+        //}
         //GET: New
         [Authorize(Roles = "Admin,Contribuitor,User")]
         public ActionResult Edit(int id)
@@ -68,7 +68,7 @@ namespace ProiectBun.Controllers
             else
             {
                 TempData["message"] = "Nu puteti sa editati acest review deoarece nu va apartine";
-                return Redirect("/Products/Show/"+review.ProductId);
+                return RedirectToAction("Index", "Products");
             }
                 
         }
@@ -79,18 +79,15 @@ namespace ProiectBun.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
                     Review review = db.Reviews.Find(id);
                     if (review.UserId == User.Identity.GetUserId() || User.IsInRole("Admin"))
                     {
                         if (TryUpdateModel(review))
                         {
 
-                            //review.Comment = requestReview.Comment;
-                            //review.Rating = requestReview.Rating;
-                            //review.Date = DateTime.Now;
-                            review = requestReview;
+                            review.Comment = requestReview.Comment;
+                            review.Rating = requestReview.Rating;
+                            review.Date = DateTime.Now;
                             db.SaveChanges();
                         }
                         return Redirect("/Products/Show/" + review.ProductId);
@@ -98,14 +95,8 @@ namespace ProiectBun.Controllers
                     else
                     {
                         TempData["message"] = "Nu puteti sa editati acest review deoarece nu va apartine";
-                        return Redirect("/Products/Show"+review.ProductId);
+                        return RedirectToAction("Index", "Products");
                     }
-                        
-                }
-                else
-                {
-                    return View(requestReview);
-                }
             }
             catch (Exception e)
             {

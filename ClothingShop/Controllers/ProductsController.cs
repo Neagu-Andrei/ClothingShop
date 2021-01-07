@@ -16,7 +16,24 @@ namespace ClothingShop.Controllers
         // GET: Products
         public ActionResult Index()
         {
-            var products = db.Products.Include("Category").Include("User");
+            var search = Request.Params["search"];
+            var sort = Request.Params["sort"];
+            if (search == null)
+                search = "";
+            if (sort == null)
+                sort = "";
+            var products = db.Products.Include("Category").Include("User").Where(product => product.Title.Contains(search)).ToList(); ;
+            foreach (var product in products)
+                GetRating(product);
+            if (sort == "price-asc")
+                products = products.OrderBy(product => product.Price).ToList();
+            if (sort == "price-desc")
+                products = products.OrderByDescending(product => product.Price).ToList();
+            if (sort == "rating-asc")
+                products = products.OrderBy(product => product.ProductRating).ToList();
+            if (sort == "rating-desc")
+                products = products.OrderByDescending(product => product.ProductRating).ToList();
+
             ViewBag.Products = products;
             if (TempData.ContainsKey("message"))
             {
@@ -31,8 +48,36 @@ namespace ClothingShop.Controllers
         {
             Product product = db.Products.Find(id);
             SetAccessRights();
-            ViewBag.ProductRating = GetRating(product);
+            GetRating(product);
             return View(product);
+        }
+        [HttpPost]
+        [Authorize(Roles = "User,Editor,Admin")]
+        public ActionResult Show(Review review)
+        {
+            review.Date = DateTime.Now;
+            review.UserId = User.Identity.GetUserId();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    db.Reviews.Add(review);
+                    db.SaveChanges();
+                    return Redirect("/Products/Show/" + review.ProductId);
+                }
+                else
+                {
+                    Product prod = db.Products.Find(review.ProductId);
+                    SetAccessRights();
+                    return View(prod);
+                }
+            }
+            catch(Exception e)
+            {
+                Product prod = db.Products.Find(review.ProductId);
+                SetAccessRights();
+                return View(prod);
+            }
         }
 
         [Authorize(Roles = "Contribuitor,Admin")]
@@ -185,7 +230,7 @@ namespace ClothingShop.Controllers
         }
 
         [NonAction]
-        public double GetRating(Product product)
+        static public void GetRating(Product product)
         {
             var ratings = product.Reviews;
             var selectList = new List<int>();
@@ -194,9 +239,9 @@ namespace ClothingShop.Controllers
                 selectList.Add(rating.Rating);
             }
             if (selectList.Count() != 0)
-                return selectList.Average();
+                product.ProductRating = selectList.Average();
             else
-                return 0;
+                product.ProductRating = 0;
         }
         private void SetAccessRights()
         {
@@ -208,6 +253,29 @@ namespace ClothingShop.Controllers
 
             ViewBag.esteAdmin = User.IsInRole("Admin");
             ViewBag.utilizatorCurent = User.Identity.GetUserId();
+        }
+        [Authorize(Roles = "Admin")]
+        public ActionResult Approve()
+        {
+            var products = db.Products.Include("Category").Include("User");
+            ViewBag.Products = products;
+            if (TempData.ContainsKey("message"))
+                ViewBag.Message = TempData["message"];
+            return View();
+        }
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Approve(int id)
+        {
+            Product product = db.Products.Find(id);
+            product.Approved = true;
+            if (TryUpdateModel(product))
+            {
+                db.SaveChanges();
+                TempData["message"] = "Produsul a fost aprobat!";
+                return RedirectToAction("Index");
+            }
+            return View();
         }
     }
 }

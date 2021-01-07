@@ -11,6 +11,23 @@
 }
 <a class="btn btn-primary" href="/Products/New">Adauga produs</a>
 <br />
+<form method="get" action="/Products/Index" id="searchForm">
+    <div class="input-group input-group-lg mb-5">
+
+        <div class="input-group-prepend show">
+            <select name="sort" class="btn btn-primary" onchange="document.getElementById('searchForm').submit()">
+                <option value="" class="bg-white text-black">Sorteaza dupa</option>
+                <option value="price-asc" @(ViewBag.sort == "price-asc" ? "selected" : "") class="bg-white text-black">Pret crescator</option>
+                <option value="price-desc" @(ViewBag.sort == "price-desc" ? "selected" : "") class="bg-white text-black">Pret descrescator</option>
+                <option value="rating-asc" @(ViewBag.sort == "rating-asc" ? "selected" : "") class="bg-white text-black">Rating crescator</option>
+                <option value="rating-desc" @(ViewBag.sort == "rating-desc" ? "selected" : "") class="bg-white text-black">Rating descrescator</option>
+            </select>
+        </div>
+
+        <input name="search" class="form-control" type="text" placeholder="Cauta in produse..." value="@ViewBag.search">
+
+    </div>
+</form>
 
 @foreach (ClothingShop.Models.Product product in ViewBag.Products)
 {
@@ -19,6 +36,9 @@
     </div>
     <div class="panel-footer">
         <a class=" btn btn-sm btn btn-success" href="/Products/Show/@product.Id">Afisare produs</a>
+        <form class="float-right" method="post" action="/Basket/New/@product.Id">
+            <button type="submit" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-shopping-cart"></i> &nbsp;Adauga in cos</button>
+        </form>
     </div>
     <br />
     <br />

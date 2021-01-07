@@ -1,0 +1,19 @@
+﻿@model ClothingShop.Models.Category
+
+<h2>Editare categorie</h2>
+
+
+
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Categories"))
+{
+
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+    @Html.HiddenFor(m => m.Id)
+    @Html.Label("Name", "Denumire categorie")
+    <br />
+    @Html.Editor("Name")
+    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+    <br />
+    <br />
+    <button class="btn btn-success" type="submit">Modifica categoria</button>
+}

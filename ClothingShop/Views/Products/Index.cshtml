@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<h1>@ViewBag.Message</h1>
+<h2>Products</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a class="btn btn-primary" href="/Categories/Index">Afisare categorii</a>
+}
+<a class="btn btn-primary" href="/Products/New">Adauga produs</a>
+<br />
+
+@foreach (ClothingShop.Models.Product product in ViewBag.Products)
+{
+    <div class="panel panel-default">
+        @Html.Partial("ProductInfo", product)
+    </div>
+    <div class="panel-footer">
+        <a class=" btn btn-sm btn btn-success" href="/Products/Show/@product.Id">Afisare produs</a>
+    </div>
+    <br />
+    <br />
+}

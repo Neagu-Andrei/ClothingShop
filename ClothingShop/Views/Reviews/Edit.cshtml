@@ -1,0 +1,37 @@
+﻿@model ClothingShop.Models.Review
+@{
+    ViewBag.Title = "Edit";
+}
+<link href="~/Content/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+<script src="~/Scripts/star-rating.js" type="text/javascript"></script>
+<h2>Editare review</h2>
+@using (Html.BeginForm(actionName: "Edit", controllerName: "Reviews"))
+{
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(model => model.Id)
+    <br />
+
+    @Html.Label("Comment", "Comentariu: ")
+    <br />
+    @Html.EditorFor(m => m.Comment)
+    @Html.ValidationMessageFor(m => m.Comment, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    @Html.Label("Rating", "Rating: ")
+    <br />
+    <input name="Rating" class="rating rating-loading" value="@Model.Rating" data-min="0" data-max="5" data-step="1">
+    //@Html.EditorFor(m => m.Rating)
+    @Html.ValidationMessageFor(m => m.Rating, "", new { @class = "text-danger" })
+
+    <br />
+    <br />
+
+    <button class="btn btn-success" type="submit">Editeaza comentariu</button>
+}
+
+

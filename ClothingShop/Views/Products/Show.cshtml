@@ -1,0 +1,99 @@
+﻿@model ClothingShop.Models.Product
+@{
+    ViewBag.Title = "Show";
+}
+<link href="~/Content/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+<script src="~/Scripts/star-rating.js" type="text/javascript"></script>
+<br />
+<a href="/Products/Index">Inapoi la produse</a>
+<br />
+<a class="btn btn-info" href="/Products/New">Adauga produs</a>
+<br />
+<div class="panel panel-default">
+    <div class="panel-heading"> @Model.Title </div>
+    <div class="panel-body">
+        Descriere produs: <strong>@Model.Description</strong>
+        <br />
+        <i class="fas fa-dollar-sign"></i> @Model.Price
+        <br />
+        <i class="glyphicon glyphicon-globe"></i> @Model.Category.Name
+        <br />
+        <img src="@Model.File.FilePath"/>
+        <input class="rating rating-loading" value="@ViewBag.ProductRating" data-min="0" data-max="5" data-step="0.1" data-disabled="true" />
+        <hr>
+        @if (User.IsInRole("Admin") || User.IsInRole("Contribuitor"))
+        {
+            <a class="btn btn-success pull-left" href="/Products/Edit/@Model.Id">Modifica produsul</a>
+            <form method="post" action="/Products/Delete/@Model.Id">
+                @Html.HttpMethodOverride(HttpVerbs.Delete)
+                <button class="btn btn-danger pull-right" type="submit">Sterge produsul</button>
+            </form>
+        }
+
+    </div>
+</div>
+
+<br />
+@foreach (var rev in Model.Reviews)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div>
+                    <p>@rev.Comment</p>
+                    <input class="rating rating-loading" value="@rev.Rating" data-min="0" data-max="5" data-step="1" data-disabled="true" data-size="sm">
+                    <small class="pull-right">@rev.Date</small>
+                    <i class="glyphicon glyphicon-user"></i> <i>review scris de </i>
+                    <strong> @rev.User.UserName </strong>
+                </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("Contribuitor") || User.IsInRole("User"))
+                {
+                    <div style="display: inline-block; float : left; margin-right: 15px">
+                        <a class="glyphicon glyphicon-pencil" href="/Reviews/Edit/@rev.Id"></a>
+                    </div>
+                    <div style="display: inline-block; float : left">
+                        <form method="post" action="/Reviews/Delete/@rev.Id">
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
+                            <button class="glyphicon glyphicon-trash" style="border: none; background: transparent" type="submit"></button>
+                        </form>
+                    </div>
+                 }
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <hr />
+}
+
+@if (User.IsInRole("Admin") || User.IsInRole("Contribuitor") || User.IsInRole("User"))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <div class="panel">
+                    <form method="post" action="/Reviews/New">
+                        <div class="panel-body">
+                            <input type="hidden" name="ProductId" value="@Model.Id" />
+                            <label>Lasa un review la acest produs</label>
+                            <br />
+                            <textarea class="form-control" name="Comment"></textarea>
+                            <br />
+                            @Html.Label("Rating", "Rating produs")
+                            <input id="input-1" name="Rating" class="rating rating-loading" data-min="0" data-max="5" data-step="1" />
+
+
+                            <br />
+                            <button class="btn btn-success " type="submit">Adauga review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+}
